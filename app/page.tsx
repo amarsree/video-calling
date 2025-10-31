@@ -44,8 +44,12 @@ export default function Home() {
   };
 
   const joinRoom = async (room: string) => {
+    // In production, use the environment variable or detect from window.location
     const socketUrl =
-      process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3000";
+      process.env.NEXT_PUBLIC_SOCKET_URL ||
+      (typeof window !== "undefined"
+        ? window.location.origin
+        : "http://localhost:3000");
     console.log("Connecting to socket server:", socketUrl);
 
     const newSocket = io(socketUrl, {

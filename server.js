@@ -4,6 +4,7 @@ const next = require('next');
 const { Server } = require('socket.io');
 
 const dev = process.env.NODE_ENV !== 'production';
+const isVercel = process.env.VERCEL === '1';
 const hostname = process.env.HOSTNAME || 'localhost';
 const port = parseInt(process.env.PORT || '3000', 10);
 
@@ -94,12 +95,20 @@ app.prepare().then(() => {
         });
     });
 
-    httpServer
-        .once('error', (err) => {
-            console.error(err);
-            process.exit(1);
-        })
-        .listen(port, () => {
-            console.log(`> Ready on http://${hostname}:${port}`);
-        });
+    // On Vercel, we don't need to listen on a port
+    // Vercel handles the HTTP server automatically
+    if (!isVercel) {
+        httpServer
+            .once('error', (err) => {
+                console.error(err);
+                process.exit(1);
+            })
+            .listen(port, () => {
+                console.log(`> Ready on http://${hostname}:${port}`);
+            });
+    } else {
+        // Export the server for Vercel
+        module.exports = httpServer;
+        console.log('> Ready on Vercel');
+    }
 });

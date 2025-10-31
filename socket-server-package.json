@@ -1,0 +1,12 @@
+{
+  "name": "video-calling-socket-server",
+  "version": "1.0.0",
+  "description": "Socket.IO server for video calling app",
+  "main": "socket-server.js",
+  "scripts": {
+    "start": "node socket-server.js"
+  },
+  "dependencies": {
+    "socket.io": "^4.8.1"
+  }
+}
